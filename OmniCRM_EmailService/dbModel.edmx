@@ -1,0 +1,420 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="OmniCRMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AdminSetting">
+          <Key>
+            <PropertyRef Name="SettingId" />
+          </Key>
+          <Property Name="SettingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="AppoinTimeInterval" Type="int" />
+          <Property Name="DailyEmailTime" Type="datetime" />
+          <Property Name="OverDueDaysRM" Type="int" />
+        </EntityType>
+        <EntityType Name="AppoinmentStatusMaster">
+          <Key>
+            <PropertyRef Name="AppoinStatusID" />
+          </Key>
+          <Property Name="AppoinStatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AppointmentDetail">
+          <Key>
+            <PropertyRef Name="AppintmentID" />
+          </Key>
+          <Property Name="AppintmentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallID" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AppointmentDateTime" Type="datetime" />
+          <Property Name="RelationshipManagerID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AppoinStatusID" Type="int" Nullable="false" />
+          <Property Name="Remarks" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="CallDetail">
+          <Key>
+            <PropertyRef Name="CallID" />
+          </Key>
+          <Property Name="CallID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MobileNumber" Type="nvarchar" MaxLength="12" Nullable="false" />
+          <Property Name="FirmName" Type="nvarchar" MaxLength="128" />
+          <Property Name="Address" Type="nvarchar" MaxLength="512" Nullable="false" />
+          <Property Name="LastChangedDate" Type="datetime" Nullable="false" />
+          <Property Name="OutComeID" Type="int" Nullable="false" />
+          <Property Name="Remark" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="UserMaster">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="EmployeeCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="PasswordSalt" Type="nvarchar(max)" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="LinkExpiryDate" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_AdminSetting_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="AdminSetting" Type="Self.AdminSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="AdminSetting">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AppointmentDetail_AppoinmentStatusMaster">
+          <End Role="AppoinmentStatusMaster" Type="Self.AppoinmentStatusMaster" Multiplicity="1" />
+          <End Role="AppointmentDetail" Type="Self.AppointmentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AppoinmentStatusMaster">
+              <PropertyRef Name="AppoinStatusID" />
+            </Principal>
+            <Dependent Role="AppointmentDetail">
+              <PropertyRef Name="AppoinStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AppointmentDetail_CallDetail">
+          <End Role="CallDetail" Type="Self.CallDetail" Multiplicity="1" />
+          <End Role="AppointmentDetail" Type="Self.AppointmentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallDetail">
+              <PropertyRef Name="CallID" />
+            </Principal>
+            <Dependent Role="AppointmentDetail">
+              <PropertyRef Name="CallID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AppointmentDetail_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="AppointmentDetail" Type="Self.AppointmentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="AppointmentDetail">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallDetail_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="CallDetail" Type="Self.CallDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="CallDetail">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="OmniCRMModelStoreContainer">
+          <EntitySet Name="AdminSetting" EntityType="Self.AdminSetting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AppoinmentStatusMaster" EntityType="Self.AppoinmentStatusMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AppointmentDetail" EntityType="Self.AppointmentDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallDetail" EntityType="Self.CallDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserMaster" EntityType="Self.UserMaster" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AdminSetting_UserMaster" Association="Self.FK_AdminSetting_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMaster" />
+            <End Role="AdminSetting" EntitySet="AdminSetting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AppointmentDetail_AppoinmentStatusMaster" Association="Self.FK_AppointmentDetail_AppoinmentStatusMaster">
+            <End Role="AppoinmentStatusMaster" EntitySet="AppoinmentStatusMaster" />
+            <End Role="AppointmentDetail" EntitySet="AppointmentDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AppointmentDetail_CallDetail" Association="Self.FK_AppointmentDetail_CallDetail">
+            <End Role="CallDetail" EntitySet="CallDetail" />
+            <End Role="AppointmentDetail" EntitySet="AppointmentDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AppointmentDetail_UserMaster" Association="Self.FK_AppointmentDetail_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMaster" />
+            <End Role="AppointmentDetail" EntitySet="AppointmentDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallDetail_UserMaster" Association="Self.FK_CallDetail_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMaster" />
+            <End Role="CallDetail" EntitySet="CallDetail" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="OmniCRMModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AdminSetting">
+          <Key>
+            <PropertyRef Name="SettingId" />
+          </Key>
+          <Property Name="SettingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AppoinTimeInterval" Type="Int32" />
+          <Property Name="DailyEmailTime" Type="DateTime" Precision="3" />
+          <Property Name="OverDueDaysRM" Type="Int32" />
+          <NavigationProperty Name="UserMaster" Relationship="Self.FK_AdminSetting_UserMaster" FromRole="AdminSetting" ToRole="UserMaster" />
+        </EntityType>
+        <EntityType Name="AppoinmentStatusMaster">
+          <Key>
+            <PropertyRef Name="AppoinStatusID" />
+          </Key>
+          <Property Name="AppoinStatusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AppointmentDetails" Relationship="Self.FK_AppointmentDetail_AppoinmentStatusMaster" FromRole="AppoinmentStatusMaster" ToRole="AppointmentDetail" />
+        </EntityType>
+        <EntityType Name="AppointmentDetail">
+          <Key>
+            <PropertyRef Name="AppintmentID" />
+          </Key>
+          <Property Name="AppintmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallID" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="AppointmentDateTime" Type="DateTime" Precision="3" />
+          <Property Name="RelationshipManagerID" Type="Guid" Nullable="false" />
+          <Property Name="AppoinStatusID" Type="Int32" Nullable="false" />
+          <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AppoinmentStatusMaster" Relationship="Self.FK_AppointmentDetail_AppoinmentStatusMaster" FromRole="AppointmentDetail" ToRole="AppoinmentStatusMaster" />
+          <NavigationProperty Name="CallDetail" Relationship="Self.FK_AppointmentDetail_CallDetail" FromRole="AppointmentDetail" ToRole="CallDetail" />
+          <NavigationProperty Name="UserMaster" Relationship="Self.FK_AppointmentDetail_UserMaster" FromRole="AppointmentDetail" ToRole="UserMaster" />
+        </EntityType>
+        <EntityType Name="CallDetail">
+          <Key>
+            <PropertyRef Name="CallID" />
+          </Key>
+          <Property Name="CallID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MobileNumber" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirmName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="512" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastChangedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OutComeID" Type="Int32" Nullable="false" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AppointmentDetails" Relationship="Self.FK_AppointmentDetail_CallDetail" FromRole="CallDetail" ToRole="AppointmentDetail" />
+          <NavigationProperty Name="UserMaster" Relationship="Self.FK_CallDetail_UserMaster" FromRole="CallDetail" ToRole="UserMaster" />
+        </EntityType>
+        <EntityType Name="UserMaster">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+          <Property Name="EmployeeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordSalt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LinkExpiryDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="AdminSettings" Relationship="Self.FK_AdminSetting_UserMaster" FromRole="UserMaster" ToRole="AdminSetting" />
+          <NavigationProperty Name="AppointmentDetails" Relationship="Self.FK_AppointmentDetail_UserMaster" FromRole="UserMaster" ToRole="AppointmentDetail" />
+          <NavigationProperty Name="CallDetails" Relationship="Self.FK_CallDetail_UserMaster" FromRole="UserMaster" ToRole="CallDetail" />
+        </EntityType>
+        <Association Name="FK_AdminSetting_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="AdminSetting" Type="Self.AdminSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="AdminSetting">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AppointmentDetail_AppoinmentStatusMaster">
+          <End Role="AppoinmentStatusMaster" Type="Self.AppoinmentStatusMaster" Multiplicity="1" />
+          <End Role="AppointmentDetail" Type="Self.AppointmentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AppoinmentStatusMaster">
+              <PropertyRef Name="AppoinStatusID" />
+            </Principal>
+            <Dependent Role="AppointmentDetail">
+              <PropertyRef Name="AppoinStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AppointmentDetail_CallDetail">
+          <End Role="CallDetail" Type="Self.CallDetail" Multiplicity="1" />
+          <End Role="AppointmentDetail" Type="Self.AppointmentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallDetail">
+              <PropertyRef Name="CallID" />
+            </Principal>
+            <Dependent Role="AppointmentDetail">
+              <PropertyRef Name="CallID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AppointmentDetail_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="AppointmentDetail" Type="Self.AppointmentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="AppointmentDetail">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallDetail_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="CallDetail" Type="Self.CallDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="CallDetail">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="OmniCRMEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AdminSettings" EntityType="Self.AdminSetting" />
+          <EntitySet Name="AppoinmentStatusMasters" EntityType="Self.AppoinmentStatusMaster" />
+          <EntitySet Name="AppointmentDetails" EntityType="Self.AppointmentDetail" />
+          <EntitySet Name="CallDetails" EntityType="Self.CallDetail" />
+          <EntitySet Name="UserMasters" EntityType="Self.UserMaster" />
+          <AssociationSet Name="FK_AdminSetting_UserMaster" Association="Self.FK_AdminSetting_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMasters" />
+            <End Role="AdminSetting" EntitySet="AdminSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AppointmentDetail_AppoinmentStatusMaster" Association="Self.FK_AppointmentDetail_AppoinmentStatusMaster">
+            <End Role="AppoinmentStatusMaster" EntitySet="AppoinmentStatusMasters" />
+            <End Role="AppointmentDetail" EntitySet="AppointmentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AppointmentDetail_CallDetail" Association="Self.FK_AppointmentDetail_CallDetail">
+            <End Role="CallDetail" EntitySet="CallDetails" />
+            <End Role="AppointmentDetail" EntitySet="AppointmentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AppointmentDetail_UserMaster" Association="Self.FK_AppointmentDetail_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMasters" />
+            <End Role="AppointmentDetail" EntitySet="AppointmentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallDetail_UserMaster" Association="Self.FK_CallDetail_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMasters" />
+            <End Role="CallDetail" EntitySet="CallDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="OmniCRMModelStoreContainer" CdmEntityContainer="OmniCRMEntities">
+          <EntitySetMapping Name="AdminSettings">
+            <EntityTypeMapping TypeName="OmniCRMModel.AdminSetting">
+              <MappingFragment StoreEntitySet="AdminSetting">
+                <ScalarProperty Name="SettingId" ColumnName="SettingId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="AppoinTimeInterval" ColumnName="AppoinTimeInterval" />
+                <ScalarProperty Name="DailyEmailTime" ColumnName="DailyEmailTime" />
+                <ScalarProperty Name="OverDueDaysRM" ColumnName="OverDueDaysRM" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AppoinmentStatusMasters">
+            <EntityTypeMapping TypeName="OmniCRMModel.AppoinmentStatusMaster">
+              <MappingFragment StoreEntitySet="AppoinmentStatusMaster">
+                <ScalarProperty Name="AppoinStatusID" ColumnName="AppoinStatusID" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AppointmentDetails">
+            <EntityTypeMapping TypeName="OmniCRMModel.AppointmentDetail">
+              <MappingFragment StoreEntitySet="AppointmentDetail">
+                <ScalarProperty Name="AppintmentID" ColumnName="AppintmentID" />
+                <ScalarProperty Name="CallID" ColumnName="CallID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="AppointmentDateTime" ColumnName="AppointmentDateTime" />
+                <ScalarProperty Name="RelationshipManagerID" ColumnName="RelationshipManagerID" />
+                <ScalarProperty Name="AppoinStatusID" ColumnName="AppoinStatusID" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallDetails">
+            <EntityTypeMapping TypeName="OmniCRMModel.CallDetail">
+              <MappingFragment StoreEntitySet="CallDetail">
+                <ScalarProperty Name="CallID" ColumnName="CallID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="FirmName" ColumnName="FirmName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="LastChangedDate" ColumnName="LastChangedDate" />
+                <ScalarProperty Name="OutComeID" ColumnName="OutComeID" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserMasters">
+            <EntityTypeMapping TypeName="OmniCRMModel.UserMaster">
+              <MappingFragment StoreEntitySet="UserMaster">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="EmployeeCode" ColumnName="EmployeeCode" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="LinkExpiryDate" ColumnName="LinkExpiryDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
