@@ -79,13 +79,10 @@ namespace OmniCRM_EmailService
                     sb.Append("<tr style='border-color: #84b5e1; background-color: #185f9e; text-align: center; color: #ffffff;'>");
                     //sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>" + "First Name" + "</th>");
                     sb.Append("<td><strong>#</strong></td>");
-                    sb.Append("<td><strong>First name</strong></td>");
-                    sb.Append("<td><strong>Last Name</strong></td>");
-                    sb.Append("<td><strong>Mobile No.</strong></td>");
-                    sb.Append("<td><strong>Addresss</strong></td>");
+                    sb.Append("<td><strong>Client</strong></td>");
                     sb.Append("<td><strong>Appointment Time</strong></td>");
-                    sb.Append("<td><strong>Created By</strong></td>");
-                    sb.Append("<td><strong>Created Date</strong></td>");
+                    sb.Append("<td><strong>Mobile No.</strong></td>");
+                    sb.Append("<td><strong>Address</strong></td>");
                     sb.Append("<td><strong>Remarks</strong></td>");
                     sb.Append("</tr>");
 
@@ -98,13 +95,10 @@ namespace OmniCRM_EmailService
                         else
                             sb.Append("<tr style='text-align: center; border-color: #84b5e1; background-color: #c5ddf3;'>");
                         sb.Append("<td>" + cnt + "</td>");
-                        sb.Append("<td>" + row.FirstName + "</td>");
-                        sb.Append("<td>" + row.LastName + "</td>");
+                        sb.Append("<td>" + row.FirstName + " " + row.LastName + "</td>");
+                        sb.Append("<td>" + row.AppointTime + "</td>");
                         sb.Append("<td>" + row.MobileNumber + "</td>");
                         sb.Append("<td>" + row.Address + "</td>");
-                        sb.Append("<td>" + row.AppointTime + "</td>");
-                        sb.Append("<td>" + row.CreatedByName + "</td>");
-                        sb.Append("<td>" + row.CreatedDate + "</td>");
                         sb.Append("<td>" + row.Remarks + "</td>");
                         sb.Append("</tr>");
                         cnt++;
@@ -116,7 +110,7 @@ namespace OmniCRM_EmailService
                     MailText = MailText.Replace("#APPOINTMENTSTABLE#", strHtmlTable);
 
                     GenericMethods.Log("Sending email to : " + item.Email);
-                    GenericMethods.SendEmailNotification(item.Email, "OmniCRM: Today's Appointment", MailText);
+                    GenericMethods.SendEmailNotification(item.Email, "OmniCRM: Today's Appointments(" + DateTime.Now.Date + ")", MailText);
                 }
 
             //===================================================================
