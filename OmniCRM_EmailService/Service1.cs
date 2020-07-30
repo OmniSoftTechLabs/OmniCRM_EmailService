@@ -54,6 +54,7 @@ namespace OmniCRM_EmailService
                 GenericMethods.Log("Error : " + ex.Message);
             }
         }
+
         private double GetNextInterval()
         {
             int lastSettingId = _context.AdminSettings.Max(p => p.SettingId);
@@ -70,6 +71,7 @@ namespace OmniCRM_EmailService
             }
             return interval = emailTime.TotalMilliseconds;
         }
+        
         protected override void OnStart(string[] args)
         {
             timer.AutoReset = true;

@@ -39,7 +39,8 @@
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.ServiceName = "OmniCRM_EmailService";
+            this.serviceInstaller1.ServiceName = "OmniCRMProd_Email";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 
